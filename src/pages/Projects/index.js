@@ -3,6 +3,8 @@ import { useActions, useValues } from 'kea';
 
 import { Link } from 'react-router-dom';
 
+import { Main } from '../../components';
+
 import projectsLogic from '../../store/projects';
 
 const Projects = () => {
@@ -14,11 +16,11 @@ const Projects = () => {
     }, [getProjectsData]);
 
     return (
-        <>
+        <Main>
             {sortedProjects.map(({ title, id, ...rest }, key) => {
                 return <div key={key}>{<Link to={`/project/` + id}>{title}</Link>}</div>;
             })}
-        </>
+        </Main>
     );
 };
 

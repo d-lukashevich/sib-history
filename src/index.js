@@ -7,9 +7,11 @@ import * as serviceWorker from './serviceWorker';
 import store from './store/initStore';
 
 import { default as Router } from './router';
+import CommonStyles from '../src/globalStyles/CommonStyles';
 
 ReactDOM.render(
     <Provider store={store}>
+        <CommonStyles />
         <Router />
     </Provider>,
     document.getElementById('root')
