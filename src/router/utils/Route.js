@@ -2,7 +2,7 @@ import React from 'react';
 import { Route as RouteOriginal } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 
-import { Header, SubWrapper } from '../../components';
+import { Header, Footer, SubWrapper } from '../../components';
 
 const Route = ({ component: Component, headerPosition, title, ...restProps }) => (
     <RouteOriginal
@@ -16,6 +16,7 @@ const Route = ({ component: Component, headerPosition, title, ...restProps }) =>
                     <Header position={headerPosition} />
                     <Component {...props} />
                 </SubWrapper>
+                <Footer />
             </>
         )}
     />

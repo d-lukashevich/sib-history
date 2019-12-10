@@ -1,12 +1,9 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import Header from './Header';
+import Container from './Container';
 
-const Container = styled.div`
-    max-width: ${({ maxWidth = 900 }) => maxWidth + 'px'};
-    margin: 0 auto;
-    padding: 0 10px;
-`;
+import Header from './Header';
+import Footer from './Footer';
 
 const StyledMain = styled.main`
     padding: 20px 0;
@@ -22,4 +19,4 @@ const Main = ({ children }) => (
     </StyledMain>
 );
 
-export { Header, Container, Main, SubWrapper };
+export { Header, Footer, Container, Main, SubWrapper };
