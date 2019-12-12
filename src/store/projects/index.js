@@ -10,7 +10,7 @@ export default kea({
         setLoading: (data) => data,
         setCurrentProject: (id) => id,
         setProjectsData: (data) => data,
-        setError: (data) => data
+        setVisibleCount: (number) => number
     }),
 
     reducers: ({ actions }) => ({
@@ -39,6 +39,13 @@ export default kea({
                         ...Object.keys(payload).map((index) => ({ [index]: { ...state[index], ...payload[index] } }))
                     )
                 })
+            }
+        ],
+        visibleCount: [
+            5,
+            PropTypes.number,
+            {
+                [actions.setVisibleCount]: (_, payload) => payload
             }
         ]
     }),

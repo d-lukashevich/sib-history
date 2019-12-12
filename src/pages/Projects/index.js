@@ -1,15 +1,19 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useActions, useValues } from 'kea';
 
 import { Link } from 'react-router-dom';
 
-import { Main } from '../../components';
+import { Main, ShowMore } from '../../components';
 
 import projectsLogic from '../../store/projects';
 
-const Projects = () => {
-    const { sortedProjects } = useValues(projectsLogic);
-    const { getProjectsData } = useActions(projectsLogic);
+const Projects = ({ projectsPerLoad = 5 }) => {
+    const { sortedProjects, visibleCount } = useValues(projectsLogic);
+    const { getProjectsData, setVisibleCount } = useActions(projectsLogic);
+
+    const increaseVisibleCount = useCallback(() => {
+        setVisibleCount(visibleCount + projectsPerLoad);
+    }, [visibleCount, projectsPerLoad, setVisibleCount]);
 
     useEffect(() => {
         getProjectsData();
@@ -17,9 +21,10 @@ const Projects = () => {
 
     return (
         <Main>
-            {sortedProjects.map(({ title, id, ...rest }, key) => {
+            {sortedProjects.slice(0, visibleCount).map(({ title, id, ...rest }, key) => {
                 return <div key={key}>{<Link to={`/project/` + id}>{title}</Link>}</div>;
             })}
+            <ShowMore {...{ increaseVisibleCount, list: sortedProjects, visibleCount }} />
         </Main>
     );
 };
