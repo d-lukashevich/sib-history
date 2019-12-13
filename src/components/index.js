@@ -2,6 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 import Container from './Container';
 import ShowMore from './ShowMore';
+import Feature from './Feature';
 
 import Header from './Header';
 import Footer from './Footer';
@@ -20,4 +21,4 @@ const Main = ({ children }) => (
     </StyledMain>
 );
 
-export { Header, Footer, Container, Main, SubWrapper, ShowMore };
+export { Header, Footer, Container, Main, SubWrapper, ShowMore, Feature };

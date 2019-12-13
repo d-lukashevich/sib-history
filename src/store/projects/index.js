@@ -75,7 +75,8 @@ export default kea({
 
             await app.content
                 .get('projects', {
-                    fields: ['id', 'title', 'description', 'order']
+                    fields: ['id', 'title', 'preview', 'description', 'order'],
+                    populate: ['preview']
                 })
                 .then((result) => {
                     actions.setProjectsData(result);
