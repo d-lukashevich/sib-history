@@ -10,6 +10,7 @@ export default kea({
         setLoading: (data) => data,
         setCurrentProject: (id) => id,
         setProjectsData: (data) => data,
+        setProjectPreview: (object) => object,
         setVisibleCount: (number) => number
     }),
 
@@ -38,6 +39,16 @@ export default kea({
                     ...Object.assign(
                         ...Object.keys(payload).map((index) => ({ [index]: { ...state[index], ...payload[index] } }))
                     )
+                })
+            }
+        ],
+        projectsPreviews: [
+            {},
+            PropTypes.object,
+            {
+                [actions.setProjectPreview]: (state, payload) => ({
+                    ...state,
+                    ...payload
                 })
             }
         ],
@@ -79,6 +90,10 @@ export default kea({
                     populate: ['preview']
                 })
                 .then((result) => {
+                    Object.keys(result).forEach((key) => {
+                        const [{ id } = {}] = result[key].preview || [];
+                        result[key].preview = id;
+                    });
                     actions.setProjectsData(result);
                 })
                 .catch((e) => {
@@ -86,6 +101,15 @@ export default kea({
                 });
 
             actions.setLoading(false);
+        },
+        getProjectPreview: async (projectId, previewId) => {
+            window.app.storage
+                .getURL(previewId, {
+                    size: {
+                        width: window.innerWidth > 880 ? 880 : window.innerWidth
+                    }
+                })
+                .then((url) => actions.setProjectPreview({ [projectId]: url }));
         },
         getProjectData: async (id) => {
             actions.setLoading();
