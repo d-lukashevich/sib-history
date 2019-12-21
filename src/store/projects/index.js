@@ -116,10 +116,21 @@ export default kea({
 
             await app.content
                 .getByField('projects', 'id', id, {
-                    fields: ['title', 'videoSlider', 'article']
+                    fields: ['title', 'imgSlider', 'videoSlider', 'article', 'banner']
                 })
-                .then((result) => {
-                    actions.setProjectsData(result);
+                .then(async (result = {}) => {
+                    const { banner: [bannerId] = [], ...restResult } = result[id] || {};
+                    actions.setProjectsData({ [id]: restResult });
+
+                    app.storage
+                        .getURL(bannerId, {
+                            size: {
+                                width: 'device'
+                            }
+                        })
+                        .then((bannerUrl) => {
+                            actions.setProjectsData({ [id]: { banner: bannerUrl } });
+                        });
                 })
                 .catch((e) => {
                     console.error(e);
