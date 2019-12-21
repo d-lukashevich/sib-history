@@ -10,6 +10,7 @@ export default kea({
         setLoading: (data) => data,
         setCurrentProject: (id) => id,
         setProjectsData: (data) => data,
+        setProjectSliderImages: (data) => data,
         setProjectPreview: (object) => object,
         setVisibleCount: (number) => number
     }),
@@ -38,6 +39,17 @@ export default kea({
                     ...state,
                     ...Object.assign(
                         ...Object.keys(payload).map((index) => ({ [index]: { ...state[index], ...payload[index] } }))
+                    )
+                }),
+                [actions.setProjectSliderImages]: (state, payload) => ({
+                    ...state,
+                    ...Object.assign(
+                        ...Object.keys(payload).map((index) => ({
+                            [index]: {
+                                ...state[index],
+                                imgSlider: { ...(state[index].imgSlider || {}), ...payload[index] }
+                            }
+                        }))
                     )
                 })
             }
@@ -119,7 +131,7 @@ export default kea({
                     fields: ['title', 'imgSlider', 'videoSlider', 'article', 'banner']
                 })
                 .then(async (result = {}) => {
-                    const { banner: [bannerId] = [], ...restResult } = result[id] || {};
+                    const { banner: [bannerId] = [], imgSlider = [], ...restResult } = result[id] || {};
                     actions.setProjectsData({ [id]: restResult });
 
                     app.storage
@@ -131,6 +143,24 @@ export default kea({
                         .then((bannerUrl) => {
                             actions.setProjectsData({ [id]: { banner: bannerUrl } });
                         });
+
+                    imgSlider.forEach((imgId) => {
+                        const img = app.storage.getURL(imgId, {
+                            size: {
+                                width: 'device'
+                            }
+                        });
+                        const sizedImg = app.storage.getURL(imgId, {
+                            size: {
+                                width: 300
+                            }
+                        });
+                        Promise.all([img, sizedImg]).then((images) => {
+                            actions.setProjectSliderImages({
+                                [id]: { [imgId]: { img: images[0], sizedImg: images[1] } }
+                            });
+                        });
+                    });
                 })
                 .catch((e) => {
                     console.error(e);
