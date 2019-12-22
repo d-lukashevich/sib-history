@@ -13,7 +13,7 @@ import projectsLogic from '../../store/projects';
 import config from '../../config';
 
 const Project = ({ match: { params: { id } = {} } = {} }) => {
-    const { currentProjectData: { title, article, banner, imgSlider = {} /* videoSlider*/ } = {} } = useValues(
+    const { currentProjectData: { title, article, banner, imgSlider = {}, videoSlider = [] } = {} } = useValues(
         projectsLogic
     );
     const { getProjectData, setCurrentProject } = useActions(projectsLogic);
@@ -53,6 +53,19 @@ const Project = ({ match: { params: { id } = {} } = {} }) => {
                                     </a>
                                 );
                             })}
+                        </Slider>
+                        <Slider preset={'video'}>
+                            {videoSlider.map(({ uniqueKey, videoLink }) => (
+                                <li key={videoLink}>
+                                    <iframe
+                                        title={uniqueKey}
+                                        src={'https://www.youtube.com/embed/' + videoLink}
+                                        frameBorder={0}
+                                        allow={'encrypted-media'}
+                                        allowFullScreen={true}
+                                    />
+                                </li>
+                            ))}
                         </Slider>
                     </div>
                 </Article>
