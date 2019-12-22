@@ -9,7 +9,8 @@ import configs from './configs';
 import colors from '../../colors';
 
 const StyledSlider = styled(SlickSlider)`
-    padding: 18px 0;
+    padding: 18px 5px;
+    margin: 25px 15px 0;
     ${({ preset }) => configs[preset].css};
     .slick-prev,
     .slick-next {

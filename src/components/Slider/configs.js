@@ -25,7 +25,6 @@ export default {
             ]
         },
         css: css`
-            margin: 25px -7px 0;
             a {
                 display: block;
                 padding: 0 7px;
@@ -68,8 +67,6 @@ export default {
             display: flex;
             justify-content: center;
             align-items: flex-end;
-            margin: 0;
-            padding: 0;
             list-style: none;
         `
     },
@@ -88,6 +85,7 @@ export default {
             iframe {
                 display: block;
                 width: 560px;
+                max-width: 100%;
                 height: 315px;
                 margin: 0 auto;
             }
