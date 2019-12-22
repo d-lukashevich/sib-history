@@ -32,11 +32,23 @@ const StyledDetails = styled.div`
     margin-left: 52px;
     text-shadow: 1px 1px 2px #000;
     transition: 1s all ease;
+    @media (max-width: 640px) {
+        position: relative;
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+    @media (max-width: 480px) {
+        margin-left: 0;
+        border: none;
+    }
 `;
 
 const StyledDescription = styled.p`
     font-size: 0.888em;
     font-weight: 300;
+    @media (max-width: 480px) {
+        display: none;
+    }
 `;
 
 const StyledHeading = styled.h2`
@@ -129,17 +141,32 @@ const StyledInner = styled.div`
                 margin-right: 8px;
             }
         `};
+    @media (max-width: 640px) {
+        display: flex;
+        align-items: flex-end;
+        min-height: 350px;
+    }
 `;
 
 const StyledFeature = styled.section`
     margin-bottom: 8px;
     &:first-of-type {
+        @media (max-width: 480px) {
+            min-height: 400px;
+            padding-top: 100px;
+            ${StyledHeading} {
+                font-size: 1.33em;
+            }
+        }
         ${StyledInner} {
             ${({ narrow }) =>
                 !narrow &&
                 css`
                     min-height: 600px;
-                `}
+                `};
+            @media (max-width: 480px) {
+                min-height: 350px;
+            }
         }
         ${StyledHeading} {
             font-size: 2.22em;
@@ -149,6 +176,9 @@ const StyledFeature = styled.section`
         ${StyledInner} {
             background-attachment: fixed;
         }
+    }
+    @media (max-width: 1060px) {
+        font-size: 0.92em;
     }
     ${({ double }) =>
         double &&
