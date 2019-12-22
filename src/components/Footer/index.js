@@ -24,19 +24,18 @@ const Copyright = styled.div`
     text-align: center;
 `;
 
-const Footer = ({ partners = [] }) => {
-    return (
-        <StyledFooter>
-            {!partners.length ? null : (
-                <Container maxWidth={1200}>
-                    <Heading>Наши партнеры</Heading>
-                </Container>
-            )}
-            <Copyright>
-                2018 &copy; Отделение Российского исторического общества в Сибирском федеральном округе
-            </Copyright>
-        </StyledFooter>
-    );
-};
+const Footer = ({ partners = [] }) => (
+    <StyledFooter>
+        {!partners.length ? null : (
+            <Container maxWidth={1200}>
+                <Heading>Наши партнеры</Heading>
+            </Container>
+        )}
+        <Copyright>
+            {new Date().getFullYear()} &copy; Отделение Российского исторического общества в Сибирском федеральном
+            округе
+        </Copyright>
+    </StyledFooter>
+);
 
 export default Footer;
