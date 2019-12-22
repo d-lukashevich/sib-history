@@ -64,7 +64,14 @@ export default {
                 }
             ]
         },
-        css: {}
+        css: css`
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        `
     },
     video: {
         settings: {

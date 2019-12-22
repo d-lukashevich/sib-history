@@ -1,7 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from '@emotion/styled';
 
+import { useActions, useValues } from 'kea';
+
+import partnersLogic from '../../store/partners';
+
 import Container from '../Container';
+import { Slider } from '../../components';
 
 const StyledFooter = styled.footer`
     padding: 10px 0;
@@ -24,18 +29,55 @@ const Copyright = styled.div`
     text-align: center;
 `;
 
-const Footer = ({ partners = [] }) => (
-    <StyledFooter>
-        {!partners.length ? null : (
-            <Container maxWidth={1200}>
-                <Heading>Наши партнеры</Heading>
-            </Container>
-        )}
-        <Copyright>
-            {new Date().getFullYear()} &copy; Отделение Российского исторического общества в Сибирском федеральном
-            округе
-        </Copyright>
-    </StyledFooter>
-);
+const StyledPartner = styled.li`
+    width: 33.3333%;
+    margin: 0 10px;
+    transition: 0.3s all ease;
+    &:hover {
+        filter: unset;
+    }
+    a {
+        display: flex;
+        min-height: 100px;
+        align-items: center;
+    }
+    img {
+        display: block;
+        max-height: 100px;
+        margin: 0 auto;
+    }
+`;
+
+const Footer = (props) => {
+    const { partnersList } = useValues(partnersLogic);
+    const { getPartners } = useActions(partnersLogic);
+
+    useEffect(() => {
+        getPartners();
+    }, [getPartners]);
+
+    return (
+        <StyledFooter {...props}>
+            {!partnersList.length ? null : (
+                <Container maxWidth={1200}>
+                    <Heading>Наши партнеры</Heading>
+                    <Slider preset={'partners'}>
+                        {partnersList.map(({ link: href, img, title }) => (
+                            <StyledPartner key={img}>
+                                <a {...{ href, title, target: '_blank' }}>
+                                    <img src={img} alt={title} />
+                                </a>
+                            </StyledPartner>
+                        ))}
+                    </Slider>
+                </Container>
+            )}
+            <Copyright>
+                {new Date().getFullYear()} &copy; Отделение Российского исторического общества в Сибирском федеральном
+                округе
+            </Copyright>
+        </StyledFooter>
+    );
+};
 
 export default Footer;

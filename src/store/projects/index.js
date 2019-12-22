@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import { kea } from 'kea';
 
+import { updateObject } from '../utils';
+
 const app = window.app;
 
 export default kea({
@@ -35,12 +37,7 @@ export default kea({
             PropTypes.object,
             { persist: true },
             {
-                [actions.setProjectsData]: (state, payload) => ({
-                    ...state,
-                    ...Object.assign(
-                        ...Object.keys(payload).map((index) => ({ [index]: { ...state[index], ...payload[index] } }))
-                    )
-                }),
+                [actions.setProjectsData]: (state, payload) => updateObject(state, payload),
                 [actions.setProjectSliderImages]: (state, payload) => ({
                     ...state,
                     ...Object.assign(
