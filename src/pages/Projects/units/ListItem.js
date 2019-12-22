@@ -143,7 +143,7 @@ const StyledItem = styled('li', {
 const activeReducer = (state, action) => (action === undefined ? true : action);
 const ListItem = ({ id, image, title, description }) => {
     const [active, dispatchActive] = useReducer(activeReducer, false);
-    const to = '/project/' + id;
+    const to = '/projects/' + id;
     return (
         <StyledItem {...{ active }}>
             <Preview onClick={dispatchActive} {...{ active }}>

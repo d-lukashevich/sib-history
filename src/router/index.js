@@ -15,7 +15,7 @@ class MainRouter extends React.Component {
                 <Switch>
                     <Route exact path="/" title="Главная" headerPosition={'absolute'} component={Main} />
                     <Route exact path="/projects" title="Проекты" component={Projects} />
-                    <Route exact path="/project/:id" title="Проект" component={Project} />
+                    <Route exact path="/projects/:id" title="Проект" component={Project} />
                     <Redirect to={{ state: { notFoundError: true } }} />
                 </Switch>
             </ConnectedRouter>
