@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback } from 'react';
 import { useActions, useValues } from 'kea';
 
-import { Main, ShowMore, Feature } from '../../components';
+import { Main, ShowMore, Feature, Loader } from '../../components';
 import headerImg from './assets/img/projects-header.jpg';
 
 import { List, ListItem } from './units';
@@ -9,7 +9,7 @@ import { List, ListItem } from './units';
 import projectsLogic from '../../store/projects';
 
 const Projects = ({ projectsPerLoad = 5 }) => {
-    const { sortedProjects, projectsPreviews, visibleCount } = useValues(projectsLogic);
+    const { sortedProjects, projectsPreviews, visibleCount, isLoading } = useValues(projectsLogic);
     const { getProjectsData, getProjectPreview, setVisibleCount } = useActions(projectsLogic);
 
     const increaseVisibleCount = useCallback(() => {
@@ -17,6 +17,7 @@ const Projects = ({ projectsPerLoad = 5 }) => {
     }, [visibleCount, projectsPerLoad, setVisibleCount]);
 
     useEffect(() => {
+        window.scrollTo(0, 0);
         getProjectsData();
     }, [getProjectsData]);
 
@@ -28,6 +29,7 @@ const Projects = ({ projectsPerLoad = 5 }) => {
 
     return (
         <>
+            <Loader active={isLoading} full={!sortedProjects.length} />
             <Feature {...{ img: headerImg, heading: 'Проекты', narrow: true }} />
             <Main>
                 <List>

@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useActions, useValues } from 'kea';
 
 import { Helmet } from 'react-helmet/es/Helmet';
 import Lightbox from 'fslightbox-react';
 
-import { Feature, Main, Article, Slider } from '../../components';
+import { Feature, Main, Article, Slider, Loader } from '../../components';
 
 import { createMarkup, useLightboxController } from '../../utils';
 
@@ -13,14 +13,16 @@ import projectsLogic from '../../store/projects';
 import config from '../../config';
 
 const Project = ({ match: { params: { id } = {} } = {} }) => {
-    const { currentProjectData: { title, article, banner, imgSlider = {}, videoSlider = [] } = {} } = useValues(
-        projectsLogic
-    );
+    const {
+        isLoading,
+        currentProjectData: { title, article, banner, imgSlider = {}, videoSlider = [] } = {}
+    } = useValues(projectsLogic);
     const { getProjectData, setCurrentProject } = useActions(projectsLogic);
 
     const [imgSliderState, openImgSlide] = useLightboxController();
 
     useEffect(() => {
+        window.scrollTo(0, 0);
         const numId = Number(id);
         getProjectData(numId);
         setCurrentProject(numId);
@@ -28,11 +30,14 @@ const Project = ({ match: { params: { id } = {} } = {} }) => {
 
     const sliderImagesKeys = Object.keys(imgSlider);
 
+    const fullLoading = useMemo(() => !banner && !article, [isLoading]);
+
     return (
         <>
             <Helmet>
                 <title>{config.title + (title ? ` | Проект ${title}` : '')}</title>
             </Helmet>
+            <Loader active={isLoading} full={fullLoading} />
             <Feature {...{ img: banner, heading: title, tag: 'Проект', narrow: true }} />
             <Main>
                 <Article>
