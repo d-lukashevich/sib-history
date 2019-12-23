@@ -5,6 +5,7 @@ import ShowMore from './ShowMore';
 import Feature from './Feature';
 import Article from './Article';
 import Slider from './Slider';
+import Loader from './Loader';
 
 import Header from './Header';
 import Footer from './Footer';
@@ -15,6 +16,7 @@ const StyledMain = styled.main`
 
 const SubWrapper = styled.div`
     min-height: 100vh;
+    overflow: hidden;
 `;
 
 const Main = ({ children }) => (
@@ -23,4 +25,4 @@ const Main = ({ children }) => (
     </StyledMain>
 );
 
-export { Header, Footer, Container, Main, SubWrapper, ShowMore, Feature, Article, Slider };
+export { Header, Footer, Container, Main, SubWrapper, ShowMore, Feature, Article, Slider, Loader };
