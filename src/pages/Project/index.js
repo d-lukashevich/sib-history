@@ -30,7 +30,10 @@ const Project = ({ match: { params: { id } = {} } = {} }) => {
 
     const sliderImagesKeys = Object.keys(imgSlider);
 
-    const fullLoading = useMemo(() => !banner && !article, [isLoading]);
+    const fullLoading = useMemo(() => {
+        return !banner && !article;
+        /* eslint-disable */
+    }, [isLoading]);
 
     return (
         <>

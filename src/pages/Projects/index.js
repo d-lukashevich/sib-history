@@ -25,6 +25,7 @@ const Projects = ({ projectsPerLoad = 5 }) => {
         sortedProjects.slice(0, visibleCount + projectsPerLoad).forEach(({ id, preview }) => {
             if (!projectsPreviews[id]) getProjectPreview(id, preview);
         });
+        /* eslint-disable */
     }, [sortedProjects, visibleCount, projectsPerLoad, getProjectPreview]);
 
     return (
