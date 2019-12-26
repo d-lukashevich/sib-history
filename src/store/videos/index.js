@@ -37,6 +37,21 @@ export default kea({
             }
         ]
     }),
+    selectors: ({ selectors }) => ({
+        sortedVideos: [
+            () => [selectors.videosData],
+            (videosData) => {
+                return Object.keys(videosData)
+                    .map((index) => videosData[index])
+                    .sort(({ order: orderA }, { order: orderB }) => {
+                        if (orderA > orderB || orderA === undefined || orderB === undefined) return -1;
+                        if (orderA < orderB) return 1;
+                        return 0;
+                    });
+            },
+            PropTypes.arrayOf(PropTypes.object)
+        ]
+    }),
     thunks: ({ actions }) => ({
         getVideosData: async () => {
             actions.setLoading();
