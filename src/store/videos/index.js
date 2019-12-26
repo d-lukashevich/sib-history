@@ -54,16 +54,18 @@ export default kea({
                         )
                     );
                     let promises = [];
-                    videosIds.forEach((id, index) => {
+                    videosIds.forEach((id) => {
                         const { cover: [coverId] = [] } = result[id];
                         if (coverId !== undefined) {
-                            promises[index] = app.storage
-                                .getURL(coverId, {
-                                    size: {
-                                        width: window.innerWidth > 880 ? 880 : window.innerWidth
-                                    }
-                                })
-                                .then((cover) => actions.setVideosData({ [id]: { cover } }));
+                            promises.push(
+                                app.storage
+                                    .getURL(coverId, {
+                                        size: {
+                                            width: window.innerWidth > 880 ? 880 : window.innerWidth
+                                        }
+                                    })
+                                    .then((cover) => actions.setVideosData({ [id]: { cover } }))
+                            );
                         }
                     });
                     await Promise.all(promises);

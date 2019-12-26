@@ -33,9 +33,9 @@ export default kea({
 
             await app.content
                 .get('about')
-                .then(({ article, cover: [coverId] = [], title }) => {
+                .then(async ({ article, cover: [coverId] = [], title }) => {
                     actions.setAboutData({ article, title });
-                    app.storage
+                    await app.storage
                         .getURL(coverId, {
                             size: {
                                 width: 'device'

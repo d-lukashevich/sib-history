@@ -131,15 +131,18 @@ export default kea({
                     const { banner: [bannerId] = [], imgSlider = [], ...restResult } = result[id] || {};
                     actions.setNewsData({ [id]: restResult });
 
-                    app.storage
-                        .getURL(bannerId, {
-                            size: {
-                                width: 'device'
-                            }
-                        })
-                        .then((bannerUrl) => {
-                            actions.setNewsData({ [id]: { banner: bannerUrl } });
-                        });
+                    let promises = [];
+                    promises.push(
+                        app.storage
+                            .getURL(bannerId, {
+                                size: {
+                                    width: 'device'
+                                }
+                            })
+                            .then((bannerUrl) => {
+                                actions.setNewsData({ [id]: { banner: bannerUrl } });
+                            })
+                    );
 
                     imgSlider.forEach((imgId) => {
                         const img = app.storage.getURL(imgId, {
@@ -152,12 +155,15 @@ export default kea({
                                 width: 300
                             }
                         });
-                        Promise.all([img, sizedImg]).then((images) => {
-                            actions.setNewsSliderImages({
-                                [id]: { [imgId]: { img: images[0], sizedImg: images[1] } }
-                            });
-                        });
+                        promises.push(
+                            Promise.all([img, sizedImg]).then((images) => {
+                                actions.setNewsSliderImages({
+                                    [id]: { [imgId]: { img: images[0], sizedImg: images[1] } }
+                                });
+                            })
+                        );
                     });
+                    await Promise.all(promises);
                 })
                 .catch((e) => {
                     console.error(e);
