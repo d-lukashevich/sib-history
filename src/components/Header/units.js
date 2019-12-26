@@ -132,7 +132,7 @@ const Menu = () => {
                 <MenuItem to={'/about'}>О нас</MenuItem>
                 <MenuItem to={'/news'}>Новости</MenuItem>
                 <MenuItem to={'/projects'}>Проекты</MenuItem>
-                <MenuItem to={'/video'}>Видео</MenuItem>
+                <MenuItem to={'/videos'}>Видео</MenuItem>
                 <MenuItem to={'/docs'}>Документы</MenuItem>
             </MenuList>
         </StyledMenu>
