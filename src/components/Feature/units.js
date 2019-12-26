@@ -103,7 +103,7 @@ const StyledInner = styled.div`
                 background: url("${img}") no-repeat center center / cover;
               `
             : css`
-                background: #000 url("${logo}") no-repeat unset center !important;
+                background: #000 url("${logo}") no-repeat 50%/50% 50%  !important;
               `}
     &:before {
         content: '';
@@ -177,6 +177,13 @@ const StyledFeature = styled.section`
             background-attachment: fixed;
         }
     }
+    ${({ fixedBg }) =>
+        fixedBg !== undefined &&
+        css`
+            ${StyledInner} {
+                background-attachment: ${fixedBg ? 'fixed' : 'initial'} !important;
+            }
+        `};
     @media (max-width: 1060px) {
         font-size: 0.92em;
     }
