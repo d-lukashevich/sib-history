@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { kea } from 'kea';
 
-import { updateObject } from '../utils';
+import { updateObject, sortData, selectVisibleItems } from '../utils';
 
 const app = window.app;
 
@@ -53,22 +53,10 @@ export default kea({
         ]
     }),
     selectors: ({ selectors }) => ({
-        sortedDocs: [
-            () => [selectors.docsData],
-            (docsData) => {
-                return Object.keys(docsData)
-                    .map((index) => docsData[index])
-                    .sort(({ order: orderA }, { order: orderB }) => {
-                        if (orderA > orderB || orderA === undefined || orderB === undefined) return -1;
-                        if (orderA < orderB) return 1;
-                        return 0;
-                    });
-            },
-            PropTypes.arrayOf(PropTypes.object)
-        ],
+        sortedDocs: [() => [selectors.docsData], sortData, PropTypes.arrayOf(PropTypes.object)],
         visibleSortedDocs: [
             () => [selectors.sortedDocs, selectors.visibleCount],
-            (sortedDocs, visibleCount) => sortedDocs.slice(0, visibleCount),
+            selectVisibleItems,
             PropTypes.arrayOf(PropTypes.object)
         ]
     }),

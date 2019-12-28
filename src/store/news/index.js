@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { kea } from 'kea';
 
-import { updateObject } from '../utils';
+import { updateObject, sortData } from '../utils';
 
 const app = window.app;
 
@@ -70,19 +70,7 @@ export default kea({
         ]
     }),
     selectors: ({ selectors }) => ({
-        sortedNews: [
-            () => [selectors.newsData],
-            (newsData) => {
-                return Object.keys(newsData)
-                    .map((index) => newsData[index])
-                    .sort(({ order: orderA }, { order: orderB }) => {
-                        if (orderA > orderB || orderA === undefined || orderB === undefined) return -1;
-                        if (orderA < orderB) return 1;
-                        return 0;
-                    });
-            },
-            PropTypes.arrayOf(PropTypes.object)
-        ],
+        sortedNews: [() => [selectors.newsData], sortData, PropTypes.arrayOf(PropTypes.object)],
         currentNewsData: [
             () => [selectors.newsData, selectors.currentNews],
             (newsData, currentNews) => (currentNews !== null ? newsData[currentNews] : {}),

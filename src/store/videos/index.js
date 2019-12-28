@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { kea } from 'kea';
 
-import { updateObject } from '../utils';
+import { updateObject, sortData, selectVisibleItems } from '../utils';
 
 const app = window.app;
 
@@ -12,7 +12,7 @@ export default kea({
         setLoading: (data) => data,
         setVideosData: (data) => data,
         setVisibleCount: (number) => number,
-        increaseVisibleCount: (number) => (number === undefined ? 5 : number)
+        increaseVisibleCount: (number) => (typeof number !== 'number' ? 5 : number)
     }),
 
     reducers: ({ actions }) => ({
@@ -40,22 +40,10 @@ export default kea({
         ]
     }),
     selectors: ({ selectors }) => ({
-        sortedVideos: [
-            () => [selectors.videosData],
-            (videosData) => {
-                return Object.keys(videosData)
-                    .map((index) => videosData[index])
-                    .sort(({ order: orderA }, { order: orderB }) => {
-                        if (orderA > orderB || orderA === undefined || orderB === undefined) return -1;
-                        if (orderA < orderB) return 1;
-                        return 0;
-                    });
-            },
-            PropTypes.arrayOf(PropTypes.object)
-        ],
+        sortedVideos: [() => [selectors.videosData], sortData, PropTypes.arrayOf(PropTypes.object)],
         visibleSortedVideos: [
             () => [selectors.sortedVideos, selectors.visibleCount],
-            (sortedVideos, visibleCount) => sortedVideos.slice(0, visibleCount),
+            selectVisibleItems,
             PropTypes.arrayOf(PropTypes.object)
         ]
     }),

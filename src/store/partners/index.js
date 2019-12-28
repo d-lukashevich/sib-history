@@ -22,11 +22,7 @@ export default kea({
     }),
 
     selectors: ({ selectors }) => ({
-        partnersList: [
-            () => [selectors.partners],
-            (partners) => Object.keys(partners).map((id) => partners[id]),
-            PropTypes.array
-        ]
+        partnersList: [() => [selectors.partners], (partners) => Object.values(partners), PropTypes.array]
     }),
 
     thunks: ({ actions }) => ({
