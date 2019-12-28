@@ -11,7 +11,8 @@ export default kea({
     actions: () => ({
         setLoading: (data) => data,
         setVideosData: (data) => data,
-        setVisibleCount: (number) => number
+        setVisibleCount: (number) => number,
+        increaseVisibleCount: (number) => (number === undefined ? 5 : number)
     }),
 
     reducers: ({ actions }) => ({
@@ -33,7 +34,8 @@ export default kea({
             5,
             PropTypes.number,
             {
-                [actions.setVisibleCount]: (_, payload) => payload
+                [actions.setVisibleCount]: (_, payload) => payload,
+                [actions.increaseVisibleCount]: (state, payload) => state + payload
             }
         ]
     }),
@@ -49,6 +51,11 @@ export default kea({
                         return 0;
                     });
             },
+            PropTypes.arrayOf(PropTypes.object)
+        ],
+        visibleSortedVideos: [
+            () => [selectors.sortedVideos, selectors.visibleCount],
+            (sortedVideos, visibleCount) => sortedVideos.slice(0, visibleCount),
             PropTypes.arrayOf(PropTypes.object)
         ]
     }),
