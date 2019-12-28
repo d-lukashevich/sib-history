@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useActions, useValues } from 'kea';
 
 import { Main, Feature, Loader, ShowMore } from '../../components';
@@ -8,24 +8,13 @@ import headerImg from './assets/img/news-header.jpg';
 
 import newsLogic from '../../store/news';
 
-const News = ({ newsPerLoad = 5 }) => {
-    const { sortedNews, newsPreviews, visibleCount, isLoading } = useValues(newsLogic);
-    const { getNewsData, getNewsPreviews, setVisibleCount } = useActions(newsLogic);
-
-    const increaseVisibleCount = useCallback(() => {
-        setVisibleCount(visibleCount + newsPerLoad);
-    }, [visibleCount, newsPerLoad, setVisibleCount]);
+const News = () => {
+    const { sortedNews = [], visibleSortedNews = [], newsPreviews, visibleCount, isLoading } = useValues(newsLogic);
+    const { getNewsData, increaseVisibleCount } = useActions(newsLogic);
 
     useEffect(() => {
         getNewsData();
     }, [getNewsData]);
-
-    useEffect(() => {
-        sortedNews.slice(0, visibleCount + newsPerLoad).forEach(({ id, preview }) => {
-            if (!newsPreviews[id]) getNewsPreviews(id, preview);
-        });
-        /* eslint-disable */
-    }, [sortedNews, visibleCount, newsPerLoad, getNewsPreviews]);
 
     return (
         <>
@@ -33,10 +22,9 @@ const News = ({ newsPerLoad = 5 }) => {
             <Feature {...{ img: headerImg, heading: 'Новости', narrow: true }} />
             <Main>
                 <StyledList>
-                    {sortedNews.slice(0, visibleCount).map(({ id, title, description }) => {
-                        const image = newsPreviews[id];
-                        return <ListItem {...{ id, title, description, image, key: id }} />;
-                    })}
+                    {visibleSortedNews.map(({ id, title, description }) => (
+                        <ListItem {...{ id, title, description, image: newsPreviews[id], key: id }} />
+                    ))}
                 </StyledList>
                 <ShowMore {...{ increaseVisibleCount, list: sortedNews, visibleCount }} />
             </Main>

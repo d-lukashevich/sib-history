@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { kea } from 'kea';
 
-import { updateObject, sortData } from '../utils';
+import { updateObject, sortData, selectVisibleItems } from '../utils';
 
 const app = window.app;
 
@@ -71,13 +71,42 @@ export default kea({
     }),
     selectors: ({ selectors }) => ({
         sortedNews: [() => [selectors.newsData], sortData, PropTypes.arrayOf(PropTypes.object)],
+        visibleSortedNews: [
+            () => [selectors.sortedNews, selectors.visibleCount],
+            selectVisibleItems,
+            PropTypes.arrayOf(PropTypes.object)
+        ],
         currentNewsData: [
             () => [selectors.newsData, selectors.currentNews],
             (newsData, currentNews) => (currentNews !== null ? newsData[currentNews] : {}),
             PropTypes.object
         ]
     }),
-    thunks: ({ actions }) => ({
+    thunks: ({ actions, get }) => ({
+        getNewsPreviews: async (newsId, previewId) => {
+            return window.app.storage
+                .getURL(previewId, {
+                    size: {
+                        width: 375
+                    }
+                })
+                .then((url) => actions.setNewsPreviews({ [newsId]: url }));
+        },
+        getPreviewsForVisibleSortedNews: async () => {
+            actions.setLoading();
+
+            const newsPreviews = get('newsPreviews');
+            const promises = get('visibleSortedNews').map(
+                ({ id, preview } = {}) => id && !newsPreviews[id] && actions.getNewsPreviews(id, preview)
+            );
+
+            Promise.all(promises).then(() => actions.setLoading(false));
+        },
+        increaseVisibleCount: async (increaseCount) => {
+            const count = get('visibleCount') + (typeof increaseCount !== 'number' ? 5 : increaseCount || 0);
+            await actions.setVisibleCount(count);
+            await actions.getPreviewsForVisibleSortedNews();
+        },
         getNewsData: async () => {
             actions.setLoading();
 
@@ -97,16 +126,7 @@ export default kea({
                     console.error(e);
                 });
 
-            actions.setLoading(false);
-        },
-        getNewsPreviews: async (newsId, previewId) => {
-            window.app.storage
-                .getURL(previewId, {
-                    size: {
-                        width: 375
-                    }
-                })
-                .then((url) => actions.setNewsPreviews({ [newsId]: url }));
+            await actions.getPreviewsForVisibleSortedNews();
         },
         getNewsEntryData: async (id) => {
             actions.setLoading();
