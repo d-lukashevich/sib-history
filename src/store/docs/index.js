@@ -78,7 +78,7 @@ export default kea({
             previews[0] = window.app.storage.getURL(previewId);
             previews[1] = window.app.storage.getURL(previewId, {
                 size: {
-                    width: window.innerWidth > 880 ? 880 : window.innerWidth
+                    width: window.innerWidth > 400 ? 400 : window.innerWidth
                 }
             });
             return Promise.all(previews).then(([img, sizedImg]) =>
@@ -90,13 +90,13 @@ export default kea({
 
             const promises = get('visibleSortedDocs').map(
                 ({ id: docId, preview: { id, img, sizedImg } = {} } = {}) =>
-                    !img && !sizedImg && actions.getDocPreview(docId, id)
+                    !img && !sizedImg && id && actions.getDocPreview(docId, id)
             );
 
             Promise.all(promises).then(() => actions.setLoading(false));
         },
         increaseVisibleCount: async (increaseCount) => {
-            const count = get('visibleCount') + typeof increaseCount !== 'number' ? 5 : increaseCount || 0;
+            const count = get('visibleCount') + (typeof increaseCount !== 'number' ? 5 : increaseCount || 0);
             await actions.setVisibleCount(count);
             await actions.getPreviewsForVisibleSortedDocs();
         },
