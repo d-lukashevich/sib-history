@@ -181,4 +181,47 @@ const Contacts = () => (
     </StyledContacts>
 );
 
-export { StyledHeader, Top, Logo, Menu, Contacts };
+const SpecialsLink = styled(Link)`
+    color: inherit;
+    text-decoration: inherit;
+`;
+
+const SpecialsImg = styled.img`
+    display: block;
+    max-width: 110px;
+    max-height: 72px;
+    margin: 0 auto;
+    border-radius: 50%;
+`;
+
+const SpecialsItem = styled.li`
+    max-width: 300px;
+    padding: 0 15px;
+`;
+
+const StyledSpecials = styled.ul`
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    align-items: center;
+    text-align: center;
+    @media (max-width: 1200px) {
+        display: none;
+    }
+`;
+
+const Specials = ({ data }) => (
+    <StyledSpecials>
+        {Object.values(data).map(({ title, preview, link }) => (
+            <SpecialsItem key={link}>
+                <SpecialsLink to={link}>
+                    <SpecialsImg src={preview} alt={title} />
+                </SpecialsLink>
+            </SpecialsItem>
+        ))}
+    </StyledSpecials>
+);
+
+export { StyledHeader, Top, Logo, Menu, Contacts, Specials };
