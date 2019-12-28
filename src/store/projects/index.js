@@ -83,13 +83,37 @@ export default kea({
             },
             PropTypes.arrayOf(PropTypes.object)
         ],
+        visibleSortedProjects: [
+            () => [selectors.sortedProjects, selectors.visibleCount],
+            (sortedProjects, visibleCount) => sortedProjects.slice(0, visibleCount),
+            PropTypes.arrayOf(PropTypes.object)
+        ],
         currentProjectData: [
             () => [selectors.projectsData, selectors.currentProject],
             (projectsData, currentProject) => (currentProject !== null ? projectsData[currentProject] : {}),
             PropTypes.object
         ]
     }),
-    thunks: ({ actions }) => ({
+    thunks: ({ actions, get }) => ({
+        getProjectPreview: async (projectId, previewId) => {
+            return window.app.storage
+                .getURL(previewId, {
+                    size: {
+                        width: window.innerWidth > 880 ? 880 : window.innerWidth
+                    }
+                })
+                .then((url) => actions.setProjectPreview({ [projectId]: url }));
+        },
+        getPreviewsForVisibleSortedProjects: async () => {
+            actions.setLoading();
+
+            const projectsPreviews = get('projectsPreviews');
+            const promises = get('visibleSortedProjects').map(
+                ({ id, preview } = {}) => id && !projectsPreviews[id] && actions.getProjectPreview(id, preview)
+            );
+
+            Promise.all(promises).then(() => actions.setLoading(false));
+        },
         getProjectsData: async () => {
             actions.setLoading();
 
@@ -109,16 +133,12 @@ export default kea({
                     console.error(e);
                 });
 
-            actions.setLoading(false);
+            await actions.getPreviewsForVisibleSortedProjects();
         },
-        getProjectPreview: async (projectId, previewId) => {
-            window.app.storage
-                .getURL(previewId, {
-                    size: {
-                        width: window.innerWidth > 880 ? 880 : window.innerWidth
-                    }
-                })
-                .then((url) => actions.setProjectPreview({ [projectId]: url }));
+        increaseVisibleCount: async (increaseCount) => {
+            const count = get('visibleCount') + (typeof increaseCount !== 'number' ? 5 : increaseCount || 0);
+            await actions.setVisibleCount(count);
+            await actions.getPreviewsForVisibleSortedProjects();
         },
         getProjectData: async (id) => {
             actions.setLoading();
