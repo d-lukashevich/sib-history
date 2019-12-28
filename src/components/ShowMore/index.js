@@ -12,25 +12,39 @@ const StyledShowMore = styled.div`
     border-radius: 50%;
     position: relative;
     cursor: pointer;
-    &:before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 50%;
-        height: 2px;
-        background: ${colors.primary};
-        transform: translate(-50%, -50%);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    &:hover {
+        transform: rotate(90deg);
+        border-color: ${colors.secondary};
+        &:before,
+        &:after {
+            background: ${colors.secondary};
+        }
+        &:before {
+            height: 4px;
+        }
+        &:after {
+            width: 4px;
+        }
     }
+    &:before,
     &:after {
         content: '';
         position: absolute;
         top: 50%;
         left: 50%;
-        width: 2px;
-        height: 50%;
         background: ${colors.primary};
         transform: translate(-50%, -50%);
+    }
+    &:before {
+        width: 50%;
+        height: 2px;
+        transition: height 0.3s ease, background-color 0.3s ease;
+    }
+    &:after {
+        width: 2px;
+        height: 50%;
+        transition: width 0.3s ease, background-color 0.3s ease;
     }
 `;
 
