@@ -95,12 +95,15 @@ export default kea({
         getPreviewsForVisibleSortedProjects: async () => {
             actions.setLoading();
 
-            const projectsPreviews = get('projectsPreviews');
-            const promises = get('visibleSortedProjects').map(
-                ({ id, preview } = {}) => id && !projectsPreviews[id] && actions.getProjectPreview(id, preview)
-            );
-
-            Promise.all(promises).then(() => actions.setLoading(false));
+            try {
+                const projectsPreviews = get('projectsPreviews');
+                const promises = get('visibleSortedProjects').map(
+                    ({ id, preview } = {}) => id && !projectsPreviews[id] && actions.getProjectPreview(id, preview)
+                );
+                Promise.all(promises).then(() => actions.setLoading(false));
+            } catch (e) {
+                actions.setLoading(false);
+            }
         },
         getProjectsData: async () => {
             actions.setLoading();
@@ -124,9 +127,13 @@ export default kea({
             await actions.getPreviewsForVisibleSortedProjects();
         },
         increaseVisibleCount: async (increaseCount) => {
-            const count = get('visibleCount') + (typeof increaseCount !== 'number' ? 5 : increaseCount || 0);
-            await actions.setVisibleCount(count);
-            await actions.getPreviewsForVisibleSortedProjects();
+            try {
+                const count = get('visibleCount') + (typeof increaseCount !== 'number' ? 5 : increaseCount || 0);
+                await actions.setVisibleCount(count);
+                await actions.getPreviewsForVisibleSortedProjects();
+            } catch (e) {
+                console.error(e);
+            }
         },
         getProjectData: async (id) => {
             actions.setLoading();

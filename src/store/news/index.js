@@ -95,17 +95,25 @@ export default kea({
         getPreviewsForVisibleSortedNews: async () => {
             actions.setLoading();
 
-            const newsPreviews = get('newsPreviews');
-            const promises = get('visibleSortedNews').map(
-                ({ id, preview } = {}) => id && !newsPreviews[id] && actions.getNewsPreviews(id, preview)
-            );
+            try {
+                const newsPreviews = get('newsPreviews');
+                const promises = get('visibleSortedNews').map(
+                    ({ id, preview } = {}) => id && !newsPreviews[id] && actions.getNewsPreviews(id, preview)
+                );
 
-            Promise.all(promises).then(() => actions.setLoading(false));
+                Promise.all(promises).then(() => actions.setLoading(false));
+            } catch (e) {
+                actions.setLoading(false);
+            }
         },
         increaseVisibleCount: async (increaseCount) => {
-            const count = get('visibleCount') + (typeof increaseCount !== 'number' ? 5 : increaseCount || 0);
-            await actions.setVisibleCount(count);
-            await actions.getPreviewsForVisibleSortedNews();
+            try {
+                const count = get('visibleCount') + (typeof increaseCount !== 'number' ? 5 : increaseCount || 0);
+                await actions.setVisibleCount(count);
+                await actions.getPreviewsForVisibleSortedNews();
+            } catch (e) {
+                console.error(e);
+            }
         },
         getNewsData: async () => {
             actions.setLoading();

@@ -76,17 +76,25 @@ export default kea({
         getPreviewsForVisibleSortedDocs: async () => {
             actions.setLoading();
 
-            const promises = get('visibleSortedDocs').map(
-                ({ id: docId, preview: { id, img, sizedImg } = {} } = {}) =>
-                    !img && !sizedImg && id && actions.getDocPreview(docId, id)
-            );
+            try {
+                const promises = get('visibleSortedDocs').map(
+                    ({ id: docId, preview: { id, img, sizedImg } = {} } = {}) =>
+                        !img && !sizedImg && id && actions.getDocPreview(docId, id)
+                );
 
-            Promise.all(promises).then(() => actions.setLoading(false));
+                Promise.all(promises).then(() => actions.setLoading(false));
+            } catch (e) {
+                actions.setLoading(false);
+            }
         },
         increaseVisibleCount: async (increaseCount) => {
-            const count = get('visibleCount') + (typeof increaseCount !== 'number' ? 5 : increaseCount || 0);
-            await actions.setVisibleCount(count);
-            await actions.getPreviewsForVisibleSortedDocs();
+            try {
+                const count = get('visibleCount') + (typeof increaseCount !== 'number' ? 5 : increaseCount || 0);
+                await actions.setVisibleCount(count);
+                await actions.getPreviewsForVisibleSortedDocs();
+            } catch (e) {
+                console.error(e);
+            }
         },
         getDocsData: async () => {
             actions.setLoading();
