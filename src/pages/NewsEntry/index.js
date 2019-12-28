@@ -22,7 +22,6 @@ const Project = ({ match: { params: { id } = {} } = {} }) => {
     const [imgSliderState, openImgSlide] = useLightboxController();
 
     useEffect(() => {
-        window.scrollTo(0, 0);
         const numId = Number(id);
         getNewsEntryData(numId);
         setCurrentNews(numId);

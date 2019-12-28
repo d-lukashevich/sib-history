@@ -17,7 +17,6 @@ const News = ({ newsPerLoad = 5 }) => {
     }, [visibleCount, newsPerLoad, setVisibleCount]);
 
     useEffect(() => {
-        window.scrollTo(0, 0);
         getNewsData();
     }, [getNewsData]);
 

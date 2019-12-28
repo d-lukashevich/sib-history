@@ -16,7 +16,6 @@ const Videos = ({ videosPerLoad = 5 }) => {
     }, [visibleCount, videosPerLoad, setVisibleCount]);
 
     useEffect(() => {
-        window.scrollTo(0, 0);
         getVideosData();
     }, [getVideosData]);
 

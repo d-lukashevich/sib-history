@@ -17,7 +17,6 @@ const Projects = ({ projectsPerLoad = 5 }) => {
     }, [visibleCount, projectsPerLoad, setVisibleCount]);
 
     useEffect(() => {
-        window.scrollTo(0, 0);
         getProjectsData();
     }, [getProjectsData]);
 
