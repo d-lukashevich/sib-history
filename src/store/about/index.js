@@ -7,11 +7,19 @@ export default kea({
     path: () => ['scenes', 'about'],
 
     actions: () => ({
+        setInitiated: (bool) => bool,
         setLoading: (data) => data,
         setAboutData: (data) => data
     }),
 
     reducers: ({ actions }) => ({
+        isInitiated: [
+            false,
+            PropTypes.bool,
+            {
+                [actions.setInitiated]: (_, payload = true) => payload
+            }
+        ],
         isLoading: [
             false,
             PropTypes.bool,
@@ -27,8 +35,9 @@ export default kea({
             }
         ]
     }),
-    thunks: ({ actions }) => ({
+    thunks: ({ actions, get }) => ({
         getAboutData: async () => {
+            if (get('isInitiated')) return;
             actions.setLoading();
 
             await app.content
@@ -47,6 +56,7 @@ export default kea({
                     console.error(e);
                 });
 
+            actions.setInitiated();
             actions.setLoading(false);
         }
     })

@@ -9,6 +9,7 @@ export default kea({
     path: () => ['scenes', 'docs'],
 
     actions: () => ({
+        setInitiated: (bool) => bool,
         setLoading: (data) => data,
         setDocsData: (data) => data,
         setDocsPreviews: (data) => data,
@@ -16,6 +17,13 @@ export default kea({
     }),
 
     reducers: ({ actions }) => ({
+        isInitiated: [
+            false,
+            PropTypes.bool,
+            {
+                [actions.setInitiated]: (_, payload = true) => payload
+            }
+        ],
         isLoading: [
             false,
             PropTypes.bool,
@@ -97,6 +105,7 @@ export default kea({
             }
         },
         getDocsData: async () => {
+            if (get('isInitiated')) return;
             actions.setLoading();
 
             await app.content
@@ -114,6 +123,7 @@ export default kea({
                 .catch((e) => {
                     console.error(e);
                 });
+            actions.setInitiated();
             await actions.getPreviewsForVisibleSortedDocs();
         }
     })

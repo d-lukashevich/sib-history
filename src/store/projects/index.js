@@ -9,6 +9,7 @@ export default kea({
     path: () => ['scenes', 'projects'],
 
     actions: () => ({
+        setInitiated: (bool) => bool,
         setLoading: (data) => data,
         setCurrentProject: (id) => id,
         setProjectsData: (data) => data,
@@ -18,6 +19,13 @@ export default kea({
     }),
 
     reducers: ({ actions }) => ({
+        isInitiated: [
+            false,
+            PropTypes.bool,
+            {
+                [actions.setInitiated]: (_, payload = true) => payload
+            }
+        ],
         isLoading: [
             false,
             PropTypes.bool,
@@ -106,6 +114,7 @@ export default kea({
             }
         },
         getProjectsData: async () => {
+            if (get('isInitiated')) return;
             actions.setLoading();
 
             await app.content
@@ -125,6 +134,7 @@ export default kea({
                 });
 
             await actions.getPreviewsForVisibleSortedProjects();
+            actions.setInitiated();
         },
         increaseVisibleCount: async (increaseCount) => {
             try {
