@@ -1,6 +1,9 @@
+import React from 'react';
 import css from '@emotion/css/macro';
 import styled from '@emotion/styled/macro';
 import colors from '../../colors';
+
+import { Link } from 'react-router-dom';
 
 import logo from '../../assets/img/vector-logo.svg';
 
@@ -82,7 +85,9 @@ const videoCss = css`
     }
 `;
 
-const StyledInner = styled.div`
+const StyledInner = styled('div', {
+    shouldForwardProp: (prop) => !['narrow', 'double', 'video'].includes(prop)
+})`
     display: block;
     width: 100%;
     min-height: ${({ narrow }) => (narrow ? '400px' : '50vh')};
@@ -148,6 +153,10 @@ const StyledInner = styled.div`
     }
 `;
 
+const StyledLinkInner = StyledInner.withComponent(Link);
+
+const Inner = (props = {}) => (props.to ? <StyledLinkInner {...props} /> : <StyledInner {...props} />);
+
 const StyledFeature = styled.section`
     margin-bottom: 8px;
     &:first-of-type {
@@ -169,7 +178,9 @@ const StyledFeature = styled.section`
             }
         }
         ${StyledHeading} {
-            font-size: 2.22em;
+            @media (min-width: 481px) {
+                font-size: 2.22em;
+            }
         }
     }
     &:nth-of-type(odd) {
@@ -198,4 +209,27 @@ const StyledFeature = styled.section`
         `}
 `;
 
-export { StyledFeature, StyledInner, StyledHeading, StyledDescription, StyledDetails, StyledTagLine, StyledTag };
+const InnerTemplate = ({ img, narrow, video, href, double, openVideo, heading, description, tag }) => (
+    <Inner
+        {...{ img, narrow, video, to: href || null, double }}
+        onClick={(e) => {
+            if (video) {
+                e.preventDefault();
+                openVideo(href);
+            }
+        }}>
+        {(heading || description) && (
+            <StyledDetails {...{ double }}>
+                {(tag || video) && (
+                    <StyledTagLine>
+                        <StyledTag>{tag || 'видео'}</StyledTag>
+                    </StyledTagLine>
+                )}
+                {heading && <StyledHeading>{heading}</StyledHeading>}
+                {description && <StyledDescription>{description}</StyledDescription>}
+            </StyledDetails>
+        )}
+    </Inner>
+);
+
+export { StyledFeature, InnerTemplate };
