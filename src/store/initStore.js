@@ -18,7 +18,8 @@ resetContext({
             router: connectRouter(history)
         },
         enhancers: [reduxReset()]
-    }
+    },
+    detachStrategy: 'persist'
 });
 
 export default getContext().store;
