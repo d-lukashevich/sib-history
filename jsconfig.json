@@ -4,10 +4,7 @@
         "experimentalDecorators": true,
         "allowSyntheticDefaultImports": false,
         "paths": {
-            "lib-root/*": ["src/*"],
-            "lib-ui/*": ["src/components/*"],
-            "root/*": ["src/*"],
-            "ui/*": ["src/components/*"]
+            "root/*": ["src/*"]
         }
     },
     "exclude": ["node_modules", "public"]
