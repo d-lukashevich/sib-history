@@ -50,7 +50,10 @@ export default kea({
                                 width: 'device'
                             }
                         })
-                        .then((cover) => actions.setAboutData({ cover }));
+                        .then((cover) => actions.setAboutData({ cover }))
+                        .catch(async (e) => {
+                            console.warn(e);
+                        });
                 })
                 .catch((e) => {
                     console.error(e);

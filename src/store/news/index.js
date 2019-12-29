@@ -140,7 +140,13 @@ export default kea({
                     actions.setNewsData(result);
                 })
                 .catch((e) => {
-                    console.error(e);
+                    console.warn(e);
+                    if (e.code === 'storage/quota-exceeded') {
+                        app.content
+                            .get('news', { fields: ['id', 'title', 'description', 'order'] })
+                            .then((result) => actions.setNewsData(result))
+                            .catch((e) => console.error(e));
+                    }
                 });
 
             actions.setInitiated();

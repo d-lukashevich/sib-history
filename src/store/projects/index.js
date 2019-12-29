@@ -130,7 +130,13 @@ export default kea({
                     actions.setProjectsData(result);
                 })
                 .catch((e) => {
-                    console.error(e);
+                    console.warn(e);
+                    if (e.code === 'storage/quota-exceeded') {
+                        app.content
+                            .get('projects', { fields: ['id', 'title', 'description', 'order'] })
+                            .then((result) => actions.setProjectsData(result))
+                            .catch((e) => console.error(e));
+                    }
                 });
 
             await actions.getPreviewsForVisibleSortedProjects();
