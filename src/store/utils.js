@@ -4,8 +4,8 @@ const sortData = (data) =>
     Object.keys(data)
         .map((index) => data[index])
         .sort(({ id: idA, order: orderA } = {}, { id: idB, order: orderB } = {}) => {
-            const compareA = orderA || Number(idA);
-            const compareB = orderB || Number(idB);
+            const compareA = orderA && orderB ? orderA : Number(idA);
+            const compareB = orderA && orderB ? orderB : Number(idB);
             if (compareA > compareB) return -1;
             if (compareA < compareB) return 1;
             return 0;
