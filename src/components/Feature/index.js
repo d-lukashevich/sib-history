@@ -14,7 +14,7 @@ const Feature = ({ heading, tag, img, href, description, narrow = false, video =
                     key={href}
                     type={'youtube'}
                     {...lightboxState}
-                    sources={[href, typeof double === 'object' ? double.href : null]}
+                    sources={typeof double === 'object' ? [href, double.href] : [href]}
                 />
             )}
             <StyledFeature {...{ img, narrow, double, ...rest }}>

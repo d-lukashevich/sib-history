@@ -10,7 +10,7 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "connected-react-router": "^6.6.1",
-    "fslightbox-react": "^1.4.6",
+    "fslightbox-react": "^1.5.0",
     "history": "^4.10.1",
     "kea": "^1.0.0",
     "kea-localstorage": "^1.0.0",
